@@ -1,16 +1,23 @@
 #include <JeeLib.h>
-//#include <LiquidCrystal.h>
 #include <PortsLCD.h>
+#include <dht.h>
+
 ISR(WDT_vect) { Sleepy::watchdogEvent(); } // Setup for low power waiting
-LiquidCrystal lcd(12,11, 9,8,7,6);
+
+const int sleepTime = 30000; //30sec
+
 const int sensorPin = A0;
-const float baselineTemp = 35.0;
-const float optimalTemp = 40.0;
-const float maxTemp = optimalTemp+2;
+const float baselineTemp = 20.0;
+const float optimalTemp = 35.0;
+const float maxTemp = 40;
+
+LiquidCrystal lcd(12,11, 9,8,7,6);
+
+dht DHT;
 
 void setup()
 {
-  //Serial.begin(9600); // open serial port
+  Serial.begin(9600); // open serial port
   
   lcd.begin(16,2);
   
@@ -38,7 +45,7 @@ void loop()
   Serial.print(", degrees C: ");
   */
   float temperature = (voltage - .5) * 100;
-  //Serial.print(temperature);
+  Serial.println(temperature);
   
   lcd.clear();
   lcd.print("Temp: ");
@@ -69,8 +76,9 @@ void loop()
     digitalWrite(3, HIGH);
     digitalWrite(4, HIGH);
   }
-  //delay(10000);
-  Sleepy::loseSomeTime(60000);
+  
+  //delay(sleepTime);
+  Sleepy::loseSomeTime(sleepTime);
     
 }
   
