@@ -13,12 +13,22 @@ const float maxTemp = 40;
 
 LiquidCrystal lcd(12,11, 9,8,7,6);
 
-dht DHT;
+/**
+*  Temperature Sensor
+**/
+
+#define DHTTYPE DHT11   // DHT 11
+#define DHTPIN 8     // what digital pin we're connected to
+
+// Initialize DHT sensor.
+DHT dht(DHTPIN, DHTTYPE);
 
 void setup()
 {
   Serial.begin(9600); // open serial port
   
+  dht.begin();
+
   lcd.begin(16,2);
   
   lcd.print("initializing :)");
@@ -33,18 +43,12 @@ void setup()
 
 void loop()
 {
-  int sensorVal = analogRead(sensorPin);
-  //Serial.print("\nSensor Value: ");
-  //Serial.print(sensorVal);
+  //int sensorVal = analogRead(sensorPin);
   
-  //conver the ADC reading to voltage
-  float voltage = (sensorVal/1024.0) * 5.0;
-  /*
-  Serial.print(", Volts: ");
-  Serial.print(voltage);
-  Serial.print(", degrees C: ");
-  */
-  float temperature = (voltage - .5) * 100;
+  float h = dht.readHumidity();
+  // Read temperature as Celsius (the default)
+  float temperature = dht.readTemperature();
+ 
   Serial.println(temperature);
   
   lcd.clear();
