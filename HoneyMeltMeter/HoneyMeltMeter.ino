@@ -45,7 +45,8 @@ void loop()
   //int sensorVal = analogRead(sensorPin);
   
   float h = dht.readHumidity();
-  Serial.println(h);
+  Serial.print(h);
+  Serial.print("_");
   // Read temperature as Celsius (the default)
   float temperature = dht.readTemperature();
   Serial.println(temperature);
