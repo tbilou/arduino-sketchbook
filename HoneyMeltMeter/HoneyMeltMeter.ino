@@ -1,10 +1,10 @@
 #include <JeeLib.h>
 #include <PortsLCD.h>
-#include <dht.h>
+#include <DHT.h>
 
 ISR(WDT_vect) { Sleepy::watchdogEvent(); } // Setup for low power waiting
 
-const int sleepTime = 30000; //30sec
+const int sleepTime = 2000; //30sec
 
 const int sensorPin = A0;
 const float baselineTemp = 20.0;
@@ -18,7 +18,7 @@ LiquidCrystal lcd(12,11, 9,8,7,6);
 **/
 
 #define DHTTYPE DHT11   // DHT 11
-#define DHTPIN 8     // what digital pin we're connected to
+#define DHTPIN 10     // what digital pin we're connected to
 
 // Initialize DHT sensor.
 DHT dht(DHTPIN, DHTTYPE);
@@ -32,7 +32,6 @@ void setup()
   lcd.begin(16,2);
   
   lcd.print("initializing :)");
-  lcd.setCursor(0,1);
   
   for(int pinNumber = 2; pinNumber<5; pinNumber++)
   {
@@ -46,15 +45,23 @@ void loop()
   //int sensorVal = analogRead(sensorPin);
   
   float h = dht.readHumidity();
+  Serial.print(h);
+  Serial.print("_");
   // Read temperature as Celsius (the default)
   float temperature = dht.readTemperature();
- 
   Serial.println(temperature);
   
   lcd.clear();
+  lcd.setCursor(0,0);
   lcd.print("Temp: ");
   lcd.print(temperature);
-  lcd.print(" C");
+  lcd.print(char(223));
+  lcd.print("C");
+  lcd.setCursor(0,1);
+  lcd.print("Hum : ");
+  lcd.print(h);
+  lcd.print("%");
+  
   
   if(temperature < baselineTemp)
   {
@@ -85,4 +92,3 @@ void loop()
   Sleepy::loseSomeTime(sleepTime);
     
 }
-  
